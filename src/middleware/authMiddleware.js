@@ -1,4 +1,8 @@
 import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+
+// Load environment variables from .env file
+dotenv.config()
 
 function authMiddleware (req, res, next) {
     const token = req.headers['authorization']
