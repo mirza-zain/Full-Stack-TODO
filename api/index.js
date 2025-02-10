@@ -5,6 +5,7 @@ import authRoutes from "../src/routes/authRoutes.js";
 import todoRoutes from "../src/routes/todoRoutes.js";
 import authMiddleware from "../src/middleware/authMiddleware.js";
 import dotenv from "dotenv"
+import { createServer } from "@vercel/node";
 
 // Load environment variables from .env file
 dotenv.config()
@@ -35,6 +36,4 @@ app.listen(PORT, () => {
     console.log(`Server Running on PORT ${PORT}`)
 })
 
-
-// Export the Express app for Vercel
-export default (req, res) => app(req, res);
+export default createServer(app);
