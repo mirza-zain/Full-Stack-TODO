@@ -1,11 +1,11 @@
 import express from "express";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import authRoutes from "../src/routes/authRoutes.js";
-import todoRoutes from "../src/routes/todoRoutes.js";
-import authMiddleware from "../src/middleware/authMiddleware.js";
+import authRoutes from "./routes/authRoutes.js";
+import todoRoutes from "./routes/todoRoutes.js"
+import authMiddleware from "./middleware/authMiddleware.js";
 import dotenv from "dotenv"
-import { createServer } from "@vercel/node";
+// import { createServer } from "@vercel/node";
 
 // Load environment variables from .env file
 dotenv.config()
@@ -36,4 +36,4 @@ app.listen(PORT, () => {
     console.log(`Server Running on PORT ${PORT}`)
 })
 
-export default createServer(app);
+// export default createServer(app);

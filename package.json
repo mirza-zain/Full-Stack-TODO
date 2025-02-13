@@ -1,22 +1,26 @@
 {
-  "name": "chapter02",
+  "name": "chapter03",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node api/index.js",
-    "dev": "node api/index.js",
-    "build": "node api/index.js"
+    "start": "node ./src/index.js",
+    "dev": "node ./src/index.js",
+    "build": "node ./src/index.js"
   },
   "keywords": [],
   "author": "Mirza Zain",
   "license": "ISC",
-  "description": "A full stack Todo App, that uses NODE Js Backend, SQLite Database and JWT Authentication",
+  "description": "A dockerized full stack Todo App, that uses NODE Js Backend, a PostgreSQL Database, Prisma ORM and JWT Authentication",
   "dependencies": {
+    "@prisma/client": "^6.3.1",
+    "@vercel/node": "^5.1.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "prisma": "^6.3.1",
     "sqlite3": "^5.1.7"
   }
 }

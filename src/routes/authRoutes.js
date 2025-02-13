@@ -1,15 +1,15 @@
 import express from "express"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import db from "../db.js"
 import dotenv from "dotenv"
+import prisma from "../prismaClient.js"
 
 // Load environment variables from .env file
 dotenv.config()
 
 const router = express.Router()
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     const { username, password } = req.body
     console.log(`Registering user: ${username}`)
 
@@ -19,19 +19,24 @@ router.post('/register', (req, res) => {
 
     // save the new user in db
     try {
-        const insertUser = db.prepare(`INSERT INTO users (username, password) VALUES (?, ?)`)
-        const result = insertUser.run(username, hashedPassword)
-        console.log(`User inserted with ID: ${result.lastInsertRowid}`)
+        const user = await prisma.user.create({
+            data: {
+                username, 
+                password: hashedPassword
+            }
+        })
 
         // default todo
-        const defaultTodo = 'Hello :) Write your first TODO'
-        const insertTodo = db.prepare(`INSERT INTO todos (user_id, task) VALUES (?, ?)`)
-        insertTodo.run(result.lastInsertRowid, defaultTodo)
-        console.log(`Default todo inserted for user ID: ${result.lastInsertRowid}`)
+       const defaultTodo = "Hello :) Add your first Todo"
+        await prisma.todo.create ({
+            data:{
+                task: defaultTodo,
+                userId: user.id
+            }
+        })
 
         // create a token
-        const token = jwt.sign({ id: result.lastInsertRowid }, process.env.JWT_SECRET, { expiresIn: '24h' })
-        console.log(`Token created: ${token}`)
+        const token = jwt.sign({ id: user.id}, process.env.JWT_SECRET, { expiresIn: '24h' })
         res.json({ token })
     } catch (err) {
         console.log(`Error during registration: ${err.message}`)
@@ -39,13 +44,17 @@ router.post('/register', (req, res) => {
     }
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const { username, password } = req.body
     console.log(`Logging in user: ${username}`)
 
     try {
-        const getUser = db.prepare(`SELECT * FROM users WHERE username = ?`)
-        const user = getUser.get(username)
+        const user = await prisma.user.findUnique({
+            where: {
+                username: username
+            }
+        })
+
         // if user not found send back the error message
         if (!user) {
             console.log(`User not found: ${username}`)
